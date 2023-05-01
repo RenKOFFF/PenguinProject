@@ -42,7 +42,10 @@ public class DrawController : MonoBehaviour
 
             _currentPenguin = hit.transform.GetComponent<Penguin>();
             if (_currentPenguin)
+            {
                 _currentLine = Instantiate(_linePrefab, mousePosition, Quaternion.identity, _linesParent);
+                _currentLine.SetColor(_currentPenguin.TrackColor);
+            }
             else return;
         }
 
@@ -52,7 +55,7 @@ public class DrawController : MonoBehaviour
         if (Input.GetButtonUp("Fire1"))
         {
             mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
-            
+
             RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector3.forward);
             if (!hit)
             {

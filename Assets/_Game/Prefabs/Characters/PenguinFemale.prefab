@@ -11,6 +11,22 @@ PrefabInstance:
       propertyPath: _penguinType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 742758132218194252, guid: bf1c748fb0f7d464686530ee50638160, type: 3}
+      propertyPath: _trackColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 742758132218194252, guid: bf1c748fb0f7d464686530ee50638160, type: 3}
+      propertyPath: _trackColor.b
+      value: 0.9857445
+      objectReference: {fileID: 0}
+    - target: {fileID: 742758132218194252, guid: bf1c748fb0f7d464686530ee50638160, type: 3}
+      propertyPath: _trackColor.g
+      value: 0.6578853
+      objectReference: {fileID: 0}
+    - target: {fileID: 742758132218194252, guid: bf1c748fb0f7d464686530ee50638160, type: 3}
+      propertyPath: _trackColor.r
+      value: 0.990566
+      objectReference: {fileID: 0}
     - target: {fileID: 4515142090887140915, guid: bf1c748fb0f7d464686530ee50638160, type: 3}
       propertyPath: m_RootOrder
       value: 0
