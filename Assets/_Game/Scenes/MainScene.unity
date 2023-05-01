@@ -277,7 +277,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7909774785183707391, guid: 02d70125068223349a3871079219bd48, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7909774785183707391, guid: 02d70125068223349a3871079219bd48, type: 3}
       propertyPath: m_LocalPosition.x
@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _linePrefab: {fileID: 8677502075248808937, guid: 0a292a1c7cc7bd14fb8d522d5ce5b37e, type: 3}
-  _distanceBetweenPoints: 0.1
+  _distanceBetweenPoints: 1
   _linesParent: {fileID: 0}
 --- !u!4 &2013057090
 Transform:
@@ -381,7 +381,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5393879723063861009, guid: f2d20a81dd8948b4fa7d98955245b72d, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5393879723063861009, guid: f2d20a81dd8948b4fa7d98955245b72d, type: 3}
       propertyPath: m_LocalPosition.x
