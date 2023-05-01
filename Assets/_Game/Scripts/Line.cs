@@ -17,12 +17,19 @@ public class Line : MonoBehaviour
         _lineRenderer.positionCount++;
         _lineRenderer.SetPosition(_lineRenderer.positionCount - 1, position);
     }
-
+    
     private bool CanAppendPosition(Vector2 position)
     {
         if (_lineRenderer.positionCount == 0) return true;
         
         return Vector2.Distance(_lineRenderer.GetPosition(_lineRenderer.positionCount - 1), position) >
                DrawController.Instance.DistanceBetweenPoints;
+    }
+
+    public Vector3[] GetPoints()
+    {
+        Vector3[] points = new Vector3[_lineRenderer.positionCount];
+        _lineRenderer.GetPositions(points);
+        return points;
     }
 }

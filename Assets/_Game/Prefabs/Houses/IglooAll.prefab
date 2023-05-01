@@ -231,9 +231,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5536544882950445142, guid: 48ec83d5e89364844977b28abeca3ced, type: 3}
+      propertyPath: _penguinType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5906808484822074020, guid: 48ec83d5e89364844977b28abeca3ced, type: 3}
       propertyPath: m_Name
-      value: Igloo
+      value: IglooAll
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48ec83d5e89364844977b28abeca3ced, type: 3}

@@ -7,9 +7,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6782078464363934108, guid: f2d20a81dd8948b4fa7d98955245b72d, type: 3}
+      propertyPath: _penguinType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4381376437720126614, guid: f2d20a81dd8948b4fa7d98955245b72d, type: 3}
       propertyPath: m_Name
-      value: Igloo
+      value: IglooFemale
       objectReference: {fileID: 0}
     - target: {fileID: 5393879723063861009, guid: f2d20a81dd8948b4fa7d98955245b72d, type: 3}
       propertyPath: m_RootOrder
