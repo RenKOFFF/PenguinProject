@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using _Game.Scripts;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Penguin : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeedCoefficient;
+    [SerializeField] private float _timeToArrive;
     [SerializeField] private float _nextPointDistance = 0.1f;
     [SerializeField] private PenguinType _penguinType;
     [SerializeField] private Color _trackColor;
@@ -16,8 +17,13 @@ public class Penguin : MonoBehaviour
     [SerializeField] private GameObject _winEffect;
 
     private List<Vector3> _movePoints;
-    private Vector2 _currentMovePoints;
+    private float _moveSpeed;
+    private Vector2 _currentMovePoint;
     private int _currentMovePointsIndex;
+
+    private bool _isGameOver;
+
+    private SpriteRenderer _renderer;
 
     private Animator _animator;
     private string _isWalking = "isWalking";
@@ -25,6 +31,8 @@ public class Penguin : MonoBehaviour
     private string _isWon = "isWon";
 
     private Line _trackLine;
+
+    private PenguinHome _home;
 
     public PenguinType PenguinType => _penguinType;
     public Color TrackColor => _trackColor;
@@ -45,37 +53,27 @@ public class Penguin : MonoBehaviour
         PenguinHasArrived -= OnPenguinHasArrived;
     }
 
-    private void OnPenguinHasArrived()
-    {
-        Instantiate(_winEffect);
-        _animator.SetTrigger(_isWon);
-    }
-
-    private void OnPenguinCrashed()
-    {
-        Instantiate(_loseEffect);
-        _animator.SetTrigger(_isCrashed);
-    }
-
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _renderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
-        if (_movePoints != null && _movePoints.Count > 0)
+        if (!_isGameOver && _movePoints != null && _movePoints.Count > 0)
         {
             _animator.SetBool(_isWalking, true);
+            _renderer.flipX = transform.position.x > _currentMovePoint.x;
 
-            _currentMovePoints = _movePoints[0];
-
+            _currentMovePoint = _movePoints[0];
+            
             transform.position = Vector2.MoveTowards(
                 transform.position,
-                _currentMovePoints,
-                _moveSpeedCoefficient * Time.deltaTime);
+                _currentMovePoint,
+                _moveSpeed * Time.deltaTime);
 
-            if (Vector2.Distance(_currentMovePoints, transform.position) < _nextPointDistance)
+            if (Vector2.Distance(_currentMovePoint, transform.position) < _nextPointDistance)
             {
                 _movePoints.RemoveAt(0);
                 _trackLine.DeletePointByIndex(0);
@@ -91,37 +89,66 @@ public class Penguin : MonoBehaviour
     {
         _movePoints = currentLine.GetPoints().ToList();
         _trackLine = currentLine;
+
+        _moveSpeed = _movePoints.Count / _timeToArrive;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        var otherPenguin = other.GetComponent<Penguin>();
+        var otherPenguin = other.transform.GetComponent<Penguin>();
         if (otherPenguin)
         {
-            SendLoseThisAndOtherPenguin(otherPenguin);
+            SendLose();
             return;
         }
-        
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
         var penguinHome = other.GetComponent<PenguinHome>();
         if (penguinHome)
         {
             if (penguinHome.PenguinType == PenguinType)
             {
-                SendWinThis();
+                _home = penguinHome;
+                SendWin();
             }
         }
-        
     }
 
-    private void SendWinThis()
+    private void SendWin()
     {
         PenguinHasArrived?.Invoke();
     }
 
-    private void SendLoseThisAndOtherPenguin(Penguin otherPenguin)
+    private void SendLose()
     {
         PenguinCrashed?.Invoke();
-        otherPenguin.PenguinCrashed?.Invoke();
+    }
+
+    private void OnPenguinHasArrived()
+    {
+        _isGameOver = true;
+
+        Instantiate(_winEffect, transform);
+        _animator.SetTrigger(_isWon);
+
+        _timeToArrive = 0;
+        transform.position = _home.WinPoint.position;
+
+        _trackLine.Clear();
+        _movePoints.Clear();
+    }
+
+    private void OnPenguinCrashed()
+    {
+        _isGameOver = true;
+        _timeToArrive = 0;
+        Instantiate(_loseEffect, transform);
+        _animator.SetTrigger(_isCrashed);
+
+        _trackLine.Clear();
+        _movePoints.Clear();
     }
 }
 

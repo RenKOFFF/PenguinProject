@@ -56,4 +56,9 @@ public class Line : MonoBehaviour
         _lineRenderer.startColor = color;
         _lineRenderer.endColor = color;
     }
+
+    public void Clear()
+    {
+        _lineRenderer.positionCount = 0;
+    }
 }
