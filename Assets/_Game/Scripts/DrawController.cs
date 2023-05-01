@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class DrawController : MonoBehaviour
 {
+    [Header("Line Settings")]
     [SerializeField] private Line _linePrefab;
     [Min(0), SerializeField] private float _distanceBetweenPoints = .1f;
-    
+
+    [Header("Other Settings")]
     [SerializeField] private Transform _linesParent;
     
     private Camera _camera;
