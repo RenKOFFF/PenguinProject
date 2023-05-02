@@ -525,7 +525,7 @@ MonoBehaviour:
   _winPanel: {fileID: 8278790287244185390}
   _losePanel: {fileID: 8278790287528989522}
   _bgPanel: {fileID: 8278790288183890400}
-  _showPanelDelay: 1
+  _showPanelDelay: 3
 --- !u!114 &8278790286833927953
 MonoBehaviour:
   m_ObjectHideFlags: 0

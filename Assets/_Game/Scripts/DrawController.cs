@@ -15,6 +15,7 @@ public class DrawController : MonoBehaviour
     private Transform _linesParent;
 
     private Dictionary<Penguin, Line> _selectedPenguins = new();
+    private Dictionary<Penguin, PenguinHome> _selectedHomes = new();
 
     private Penguin _currentPenguin;
     private PenguinHome _currentPenguinHome;
@@ -45,7 +46,7 @@ public class DrawController : MonoBehaviour
     {
         GameStarted -= OnGameStarted;
     }
-    
+
     private void Update()
     {
         var mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
@@ -55,7 +56,7 @@ public class DrawController : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector3.forward);
             if (!hit)
             {
-                ClearCurrentLineAndPenguinsData();
+                //ClearCurrentLineAndPenguinsData();
                 return;
             }
 
@@ -96,20 +97,32 @@ public class DrawController : MonoBehaviour
             }
 
             _currentPenguinHome = hit.transform.GetComponent<PenguinHome>();
-            if (_currentPenguinHome &&
+
+            if (_currentPenguin &&
+                _currentPenguinHome &&
+                //!_selectedHomes.ContainsValue(_currentPenguinHome) &&
                 (_currentPenguinHome.PenguinType == PenguinType.All ||
                  _currentPenguinHome.PenguinType == _currentPenguin.PenguinType))
             {
-                _currentPenguin.SetPath(_currentLine);
-                _currentPenguin.SetHome(_currentPenguinHome);
+                if (!_selectedHomes.ContainsKey(_currentPenguin) &&
+                    !_selectedHomes.ContainsValue(_currentPenguinHome))
+                {
+                    _selectedHomes.TryAdd(_currentPenguin, _currentPenguinHome);
 
-                if (_selectedPenguins.Count == GameManager.Instance.PenguinsCount)
-                    GameStarted?.Invoke(true);
+                    _currentPenguin.SetPath(_currentLine);
+                    _currentPenguin.SetHome(_currentPenguinHome);
+
+                    MakeNullCurrentPenguinData();
+
+                    if (_selectedPenguins.Count == GameManager.Instance.PenguinsCount)
+                        GameStarted?.Invoke(true);
+                }
+                else ClearCurrentLineAndPenguinsData();
             }
             else ClearCurrentLineAndPenguinsData();
         }
     }
-    
+
     private void OnGameStarted(bool onGameStarted)
     {
         enabled = false;
@@ -126,9 +139,22 @@ public class DrawController : MonoBehaviour
                 Destroy(line.gameObject);
 
             _selectedPenguins.Remove(_currentPenguin);
+
+            if (_currentPenguinHome && _selectedHomes.ContainsValue(_currentPenguinHome) ||
+                _selectedHomes.ContainsKey(_currentPenguin))
+            {
+                if (_selectedHomes.TryGetValue(_currentPenguin, out var home))
+                    _selectedHomes.Remove(_currentPenguin);
+            }
         }
 
+        MakeNullCurrentPenguinData();
+    }
+
+    private void MakeNullCurrentPenguinData()
+    {
         _currentPenguin = null;
         _currentPenguinHome = null;
+        _currentLine = null;
     }
 }
