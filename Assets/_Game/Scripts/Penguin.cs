@@ -21,7 +21,7 @@ public class Penguin : MonoBehaviour
     private Vector2 _currentMovePoint;
     private int _currentMovePointsIndex;
 
-    private bool _isGameOver;
+    private bool _isGameStarted;
 
     private SpriteRenderer _renderer;
 
@@ -45,12 +45,19 @@ public class Penguin : MonoBehaviour
     {
         PenguinCrashed += OnPenguinCrashed;
         PenguinHasArrived += OnPenguinHasArrived;
+        DrawController.Instance.GameStarted += OnGameStarted;
     }
 
     private void OnDisable()
     {
         PenguinCrashed -= OnPenguinCrashed;
         PenguinHasArrived -= OnPenguinHasArrived;
+        DrawController.Instance.GameStarted -= OnGameStarted;
+    }
+
+    private void OnGameStarted(bool isGameStarted)
+    {
+        _isGameStarted = isGameStarted;
     }
 
     private void Awake()
@@ -61,7 +68,7 @@ public class Penguin : MonoBehaviour
 
     private void Update()
     {
-        if (!_isGameOver && _movePoints != null && _movePoints.Count > 0)
+        if (_isGameStarted && _movePoints != null && _movePoints.Count > 0)
         {
             _animator.SetBool(_isWalking, true);
             _renderer.flipX = transform.position.x > _currentMovePoint.x;
@@ -77,6 +84,8 @@ public class Penguin : MonoBehaviour
             {
                 _movePoints.RemoveAt(0);
                 _trackLine.DeletePointByIndex(0);
+                
+                if (_movePoints.Count == 0) SendWin();
             }
         }
         else
@@ -93,6 +102,11 @@ public class Penguin : MonoBehaviour
         _moveSpeed = _movePoints.Count / _timeToArrive;
     }
 
+    public void SetHome(PenguinHome currentPenguinHome)
+    {
+        _home = currentPenguinHome;
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
         var otherPenguin = other.transform.GetComponent<Penguin>();
@@ -100,19 +114,6 @@ public class Penguin : MonoBehaviour
         {
             SendLose();
             return;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        var penguinHome = other.GetComponent<PenguinHome>();
-        if (penguinHome)
-        {
-            if (penguinHome.PenguinType == PenguinType)
-            {
-                _home = penguinHome;
-                SendWin();
-            }
         }
     }
 
@@ -128,12 +129,12 @@ public class Penguin : MonoBehaviour
 
     private void OnPenguinHasArrived()
     {
-        _isGameOver = true;
+        _isGameStarted = false;
 
         Instantiate(_winEffect, transform);
         _animator.SetTrigger(_isWon);
 
-        _timeToArrive = 0;
+        _moveSpeed = 0;
         transform.position = _home.WinPoint.position;
 
         _trackLine.Clear();
@@ -142,8 +143,8 @@ public class Penguin : MonoBehaviour
 
     private void OnPenguinCrashed()
     {
-        _isGameOver = true;
-        _timeToArrive = 0;
+        _isGameStarted = false;
+        _moveSpeed = 0;
         Instantiate(_loseEffect, transform);
         _animator.SetTrigger(_isCrashed);
 
