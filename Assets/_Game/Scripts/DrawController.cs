@@ -101,6 +101,7 @@ public class DrawController : MonoBehaviour
                  _currentPenguinHome.PenguinType == _currentPenguin.PenguinType))
             {
                 _currentPenguin.SetPath(_currentLine);
+                _currentPenguin.SetHome(_currentPenguinHome);
 
                 if (_selectedPenguins.Count == GameManager.Instance.PenguinsCount)
                     GameStarted?.Invoke(true);
